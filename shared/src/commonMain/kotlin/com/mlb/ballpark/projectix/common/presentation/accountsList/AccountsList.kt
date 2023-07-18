@@ -163,7 +163,7 @@ internal fun AccountsList(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 16.dp)
+                                .padding(horizontal = 32.dp, vertical = 16.dp)
                                 .align(Alignment.CenterHorizontally),
                             text = text,
                             color = Color.Gray,
