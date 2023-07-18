@@ -5,4 +5,4 @@ import com.mlb.ballpark.projectix.common.presentation.RootContent
 
 @Composable
 fun MainView() =
-    RootContent(Modifier.fillMaxSize()) { }
+    RootContent(Modifier.fillMaxSize(), listOf(), {}, {}, {}, listOf())

@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,8 +42,13 @@ internal fun AccountsList(
     onAddAccount: (Account) -> Unit,
     onRemoveAccount: (Account) -> Unit,
     onExitProjecTix: () -> Unit,
+    onShowDatePicker: (String) -> Unit,
+    chosenDates: List<Pair<String, String>>, // todo: hacked in
+    onRemoveDate: (Pair<String, String>) -> Unit, // todo: hacked in
+    teams: List<String>, // todo: move this internal
 ) {
     var showOptions by remember { mutableStateOf(false) }
+    var showTeamPicker by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier.fillMaxSize(),
@@ -62,7 +69,7 @@ internal fun AccountsList(
             modifier = Modifier.align(Alignment.TopCenter).padding(top = 48.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (accounts.isNullOrEmpty()) {
+            if (accounts.isEmpty()) {
                 Text(
                     modifier = Modifier.padding(32.dp),
                     text = "No accounts currently linked to ProjecTix.",
@@ -111,7 +118,14 @@ internal fun AccountsList(
                                 )
                                 Spacer(modifier = modifier.weight(1F))
                                 IconButton(
-                                    onClick = { onRemoveAccount(connectedAccount) },
+                                    onClick = {
+                                        if (accounts.size == 1) { // todo: super hacked together
+                                            chosenDates.forEach {
+                                                onRemoveDate(it)
+                                            }
+                                        }
+                                        onRemoveAccount(connectedAccount)
+                                    },
                                 ) {
                                     Icon(
                                         imageVector = Icons.Rounded.Delete,
@@ -121,22 +135,92 @@ internal fun AccountsList(
                             }
                         }
                     }
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 24.dp, bottom = 16.dp),
+                        ) {
+                            Button(
+                                modifier = Modifier
+                                    .align(Alignment.Center),
+                                onClick = { showTeamPicker = true },
+                            ) {
+                                Text(
+                                    text = "Submit a Team & Date",
+                                    textAlign = TextAlign.Center,
+                                )
+                            }
+                        }
+                    }
+
+                    item {
+                        val text = if (chosenDates.isNotEmpty()) {
+                            "You are eligible for the shown teams and dates."
+                        } else {
+                            "Add the teams and dates you want to be eligible for."
+                        }
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                                .align(Alignment.CenterHorizontally),
+                            text = text,
+                            color = Color.Gray,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+
+                    items(chosenDates.sortedBy { it.first }) { chosenDate ->
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Column {
+                                Text(
+                                    text = chosenDate.first,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                                Text(text = chosenDate.second)
+                            }
+                            Spacer(modifier = Modifier.weight(1F))
+                            IconButton(
+                                onClick = { onRemoveDate(chosenDate) },
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Delete,
+                                    contentDescription = "Remove Account from ProjecTix",
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        ExpandedFabMenu(
-            modifier = Modifier
-                .wrapContentSize()
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp),
-            showOptions = showOptions,
-            onShowOptionsChange = { showOptions = !showOptions },
-            onOptionSelect = {
-                // todo go to account link page
-                onAddAccount(it)
-                showOptions = false
-            },
-        )
+        if (showTeamPicker) {
+            TeamPicker(
+                teams = teams,
+                onShowDatePicker = {
+                    showTeamPicker = false
+                    onShowDatePicker(it)
+                },
+                onExitProjecTix = onExitProjecTix,
+            )
+        } else {
+            ExpandedFabMenu(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 16.dp),
+                showOptions = showOptions,
+                onShowOptionsChange = { showOptions = !showOptions },
+                onOptionSelect = {
+                    // todo go to account link page
+                    onAddAccount(it)
+                    showOptions = false
+                },
+            )
+        }
     }
 }

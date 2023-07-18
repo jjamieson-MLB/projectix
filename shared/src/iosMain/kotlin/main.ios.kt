@@ -11,5 +11,5 @@ import platform.UIKit.UIViewController
 
 fun MainViewController(): UIViewController =
     ComposeUIViewController {
-        RootContent(modifier = Modifier.fillMaxSize()) { }
+        RootContent(modifier = Modifier.fillMaxSize(), listOf(), {}, {}, {}, listOf())
     }

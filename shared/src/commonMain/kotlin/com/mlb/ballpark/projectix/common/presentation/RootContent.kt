@@ -13,7 +13,11 @@ import com.mlb.ballpark.projectix.common.presentation.models.Screen
 @Composable
 fun RootContent(
     modifier: Modifier = Modifier,
+    chosenDates: List<Pair<String, String>>,
+    onShowDatePicker: (String) -> Unit,
     onExitProjecTix: () -> Unit,
+    onRemoveDate: (Pair<String, String>) -> Unit,
+    teams: List<String>,
 ) {
     val model = remember { RootStore() }
     val state = model.state
@@ -29,6 +33,10 @@ fun RootContent(
                 },
                 onRemoveAccount = { model.removeAccount(it) },
                 onExitProjecTix = onExitProjecTix,
+                onShowDatePicker = onShowDatePicker,
+                chosenDates = chosenDates,
+                onRemoveDate = onRemoveDate,
+                teams = teams,
             )
         }
 
