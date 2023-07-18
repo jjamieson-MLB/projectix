@@ -67,7 +67,7 @@ internal fun TeamPicker(
                 state = listState,
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                items(teams) { team ->
+                items(teams.sorted()) { team ->
                     ElevatedCard(
                         modifier = Modifier
                             .wrapContentHeight()
