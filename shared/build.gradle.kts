@@ -61,6 +61,11 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
+                sourceSets["commonMain"].resources.setSrcDirs(
+                    listOf(
+                        "src/commonMain/resources", // <-- add the commonMain Resources
+                    ),
+                )
             }
         }
         val androidMain by getting {

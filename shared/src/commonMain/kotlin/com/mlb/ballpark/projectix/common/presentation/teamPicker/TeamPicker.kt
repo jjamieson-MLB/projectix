@@ -1,4 +1,4 @@
-package com.mlb.ballpark.projectix.common.presentation.accountsList
+package com.mlb.ballpark.projectix.common.presentation.teamPicker
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,8 +20,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,7 +32,7 @@ import androidx.compose.ui.unit.sp
 internal fun TeamPicker(
     modifier: Modifier = Modifier,
     onExitProjecTix: () -> Unit,
-    onShowDatePicker: (String) -> Unit,
+    onGoToMatchupSelection: (String) -> Unit,
     teams: List<String>,
 ) {
     Box(
@@ -73,7 +71,7 @@ internal fun TeamPicker(
                             .wrapContentHeight()
                             .fillMaxWidth(),
                         onClick = {
-                            onShowDatePicker(team)
+                            onGoToMatchupSelection(team)
                         },
                     ) {
                         Text(

@@ -1,5 +1,6 @@
 package com.mlb.ballpark.projectix.common.presentation.accountAuth
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,7 +27,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mlb.ballpark.projectix.common.presentation.models.Account
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun AccountAuthorization(
     account: Account,
@@ -48,6 +52,10 @@ internal fun AccountAuthorization(
                 contentDescription = "Exit Account Linking",
             )
         }
+        Image(
+            painter = painterResource("projectix.png"),
+            contentDescription = null,
+        )
         Text(
             modifier = Modifier
                 .padding(horizontal = 48.dp)

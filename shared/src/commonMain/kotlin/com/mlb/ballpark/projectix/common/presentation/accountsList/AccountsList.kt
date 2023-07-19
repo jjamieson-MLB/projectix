@@ -1,25 +1,29 @@
 package com.mlb.ballpark.projectix.common.presentation.accountsList
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,14 +36,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mlb.ballpark.projectix.common.presentation.models.Account
+import com.mlb.ballpark.projectix.common.presentation.teamPicker.TeamPicker
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun AccountsList(
     modifier: Modifier = Modifier,
     accounts: List<Account>,
-    onAddAccount: (Account) -> Unit,
+    onGoToAccountPicker: () -> Unit,
+    onGoToMatchupSelection: () -> Unit,
     onRemoveAccount: (Account) -> Unit,
     onExitProjecTix: () -> Unit,
     onShowDatePicker: (String) -> Unit,
@@ -47,7 +55,6 @@ internal fun AccountsList(
     onRemoveDate: (Pair<String, String>) -> Unit, // todo: hacked in
     teams: List<String>, // todo: move this internal
 ) {
-    var showOptions by remember { mutableStateOf(false) }
     var showTeamPicker by remember { mutableStateOf(false) }
 
     Box(
@@ -57,7 +64,11 @@ internal fun AccountsList(
 
         IconButton(
             modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-            onClick = onExitProjecTix,
+            onClick = if (showTeamPicker) {
+                { showTeamPicker = false }
+            } else {
+                onExitProjecTix
+            },
         ) {
             Icon(
                 imageVector = Icons.Rounded.Close,
@@ -65,13 +76,30 @@ internal fun AccountsList(
             )
         }
 
+        IconButton(
+            modifier = Modifier
+                .padding(top = 16.dp, end = 16.dp)
+                .align(Alignment.TopEnd),
+            onClick = {},
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.Person,
+                contentDescription = "ProjecTix Profile",
+            )
+        }
+
         Column(
             modifier = Modifier.align(Alignment.TopCenter).padding(top = 48.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Image(
+                modifier = Modifier.wrapContentSize(),
+                painter = painterResource("projectix.png"),
+                contentDescription = null,
+            )
             if (accounts.isEmpty()) {
                 Text(
-                    modifier = Modifier.padding(32.dp),
+                    modifier = Modifier.padding(16.dp),
                     text = "No accounts currently linked to ProjecTix.",
                     color = Color.Gray,
                     textAlign = TextAlign.Center,
@@ -81,60 +109,46 @@ internal fun AccountsList(
                     color = Color.Gray,
                     textAlign = TextAlign.Center,
                 )
+                Button(
+                    modifier = Modifier.padding(32.dp),
+                    onClick = onGoToAccountPicker,
+                ) {
+                    Text(text = "Link ProjecTix Account")
+                }
             } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Image(
+                        modifier = Modifier.offset(y = (-32).dp),
+                        painter = painterResource("green-check-mark-verified-circle.png"),
+                        contentDescription = null,
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .offset(y = (-32).dp),
+                        text = "You've linked a verified account to ProjecTix.",
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center,
+                    )
+                }
                 Text(
-                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 24.dp),
-                    text = "You've linked verified accounts to your ProjecTix.",
-                    color = Color.Gray,
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .offset(y = (-32).dp)
+                        .clickable { onRemoveAccount(accounts.first()) },
+                    text = "Unlink Account.",
+                    color = Color.Blue,
                     textAlign = TextAlign.Center,
                 )
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp)
+                        .offset(y = (-32).dp),
                     state = listState,
                 ) {
-                    items(accounts) { connectedAccount ->
-                        ElevatedCard(
-                            modifier = Modifier
-                                .wrapContentHeight()
-                                .fillMaxWidth()
-                                .padding(bottom = 16.dp),
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .wrapContentHeight()
-                                    .fillMaxWidth()
-                                    .padding(8.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Person,
-                                    contentDescription = null,
-                                )
-                                Text(
-                                    modifier = Modifier.padding(start = 16.dp),
-                                    text = connectedAccount.accountType.value,
-                                    fontSize = 24.sp,
-                                    color = Color.Black,
-                                )
-                                Spacer(modifier = modifier.weight(1F))
-                                IconButton(
-                                    onClick = {
-                                        if (accounts.size == 1) { // todo: super hacked together
-                                            chosenDates.forEach {
-                                                onRemoveDate(it)
-                                            }
-                                        }
-                                        onRemoveAccount(connectedAccount)
-                                    },
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Rounded.Delete,
-                                        contentDescription = "Remove Account from ProjecTix",
-                                    )
-                                }
-                            }
-                        }
-                    }
                     item {
                         Box(
                             modifier = Modifier
@@ -198,28 +212,34 @@ internal fun AccountsList(
             }
         }
 
-        if (showTeamPicker) {
-            TeamPicker(
-                teams = teams,
-                onShowDatePicker = {
-                    showTeamPicker = false
-                    onShowDatePicker(it)
-                },
-                onExitProjecTix = onExitProjecTix,
-            )
-        } else {
-            ExpandedFabMenu(
+        if (accounts.isNotEmpty()) {
+            ExtendedFloatingActionButton(
                 modifier = Modifier
                     .wrapContentSize()
                     .align(Alignment.BottomEnd)
                     .padding(end = 16.dp, bottom = 16.dp),
-                showOptions = showOptions,
-                onShowOptionsChange = { showOptions = !showOptions },
-                onOptionSelect = {
-                    // todo go to account link page
-                    onAddAccount(it)
-                    showOptions = false
+                text = {
+                    Text(text = "Edit Eligible Games")
                 },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Eligible Games",
+                    )
+                },
+                onClick = onGoToMatchupSelection,
+                containerColor = MaterialTheme.colorScheme.primary,
+            )
+        }
+
+        if (showTeamPicker) {
+            TeamPicker(
+                teams = teams,
+                onGoToMatchupSelection = {
+                    showTeamPicker = false
+                    onShowDatePicker(it)
+                },
+                onExitProjecTix = onExitProjecTix,
             )
         }
     }
