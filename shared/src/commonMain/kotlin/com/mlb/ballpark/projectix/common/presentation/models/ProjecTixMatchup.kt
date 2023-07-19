@@ -27,4 +27,6 @@ data class ProjecTixMatchup(
     val mVenueCity: String? = null,
 
     val mVenueName: String? = null,
+
+    var selected: Boolean = false,
 )

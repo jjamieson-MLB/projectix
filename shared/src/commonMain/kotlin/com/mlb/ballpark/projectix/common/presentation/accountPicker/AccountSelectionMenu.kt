@@ -34,6 +34,7 @@ internal fun AccountSelectionMenu(
                 AccountCard(
                     accountType = AccountType.SPORTS_CONNECT,
                     accountName = "Sports Connect",
+                    accountIcon = "sports_connect_logo.png",
                     onOptionSelect = onOptionSelect,
                 )
             }
@@ -41,6 +42,7 @@ internal fun AccountSelectionMenu(
                 AccountCard(
                     accountType = AccountType.SPORTS_ENGINE,
                     accountName = "Sports Engine",
+                    accountIcon = "sports_engine_logo.png",
                     onOptionSelect = onOptionSelect,
                 )
             }
@@ -48,6 +50,7 @@ internal fun AccountSelectionMenu(
                 AccountCard(
                     accountType = AccountType.LEAGUE_APPS,
                     accountName = "League Apps",
+                    accountIcon = "league_apps_logo.png",
                     onOptionSelect = onOptionSelect,
                 )
             }
@@ -55,6 +58,7 @@ internal fun AccountSelectionMenu(
                 AccountCard(
                     accountType = AccountType.GAME_CHANGER,
                     accountName = "GameChanger",
+                    accountIcon = "game_changer_logo.png",
                     onOptionSelect = onOptionSelect,
                 )
             }

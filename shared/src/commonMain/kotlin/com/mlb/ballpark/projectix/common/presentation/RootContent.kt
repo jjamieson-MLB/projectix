@@ -2,8 +2,10 @@ package com.mlb.ballpark.projectix.common.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.mlb.ballpark.projectix.common.presentation.accountAuth.AccountAuthorization
 import com.mlb.ballpark.projectix.common.presentation.accountPicker.AccountPicker
@@ -18,16 +20,17 @@ import com.mlb.ballpark.projectix.common.presentation.teamPicker.TeamPicker
 fun RootContent(
     modifier: Modifier = Modifier,
     projecTixMatchups: List<ProjecTixMatchup>,
-    chosenDates: List<Pair<String, String>>,
+//    chosenDates: List<Pair<String, String>>,
     onTeamSelected: (String) -> Unit,
     onExitProjecTix: () -> Unit,
-    onRemoveDate: (Pair<String, String>) -> Unit,
+//    onRemoveDate: (Pair<String, String>) -> Unit,
     teams: List<String>,
 ) {
     val model = remember { RootStore() }
     val state = model.state
     val screenState: MutableState<Pair<Screen, Any?>> =
         remember { mutableStateOf(Pair(Screen.LINKED_ACCOUNTS, null)) }
+    var matchupsSelected: List<ProjecTixMatchup> by remember { mutableStateOf(listOf()) }
     when (screenState.value.first) {
         Screen.LINKED_ACCOUNTS -> {
             AccountsList(
@@ -41,9 +44,9 @@ fun RootContent(
                 },
                 onRemoveAccount = { model.removeAccount(it) },
                 onExitProjecTix = onExitProjecTix,
-                onShowDatePicker = onTeamSelected,
-                chosenDates = chosenDates,
-                onRemoveDate = onRemoveDate,
+//                onShowDatePicker = onTeamSelected,
+//                chosenDates = chosenDates,
+//                onRemoveDate = onRemoveDate,
                 teams = teams,
             )
         }
@@ -82,6 +85,10 @@ fun RootContent(
                     screenState.goToTeamPicker()
                 },
                 onGoToAccountsList = {
+                    screenState.goToAccountsList()
+                },
+                onMatchupsSelected = {
+                    matchupsSelected = it
                     screenState.goToAccountsList()
                 },
             )

@@ -5,19 +5,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -33,7 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mlb.ballpark.projectix.common.presentation.models.Account
@@ -50,9 +46,6 @@ internal fun AccountsList(
     onGoToMatchupSelection: () -> Unit,
     onRemoveAccount: (Account) -> Unit,
     onExitProjecTix: () -> Unit,
-    onShowDatePicker: (String) -> Unit,
-    chosenDates: List<Pair<String, String>>, // todo: hacked in
-    onRemoveDate: (Pair<String, String>) -> Unit, // todo: hacked in
     teams: List<String>, // todo: move this internal
 ) {
     var showTeamPicker by remember { mutableStateOf(false) }
@@ -149,65 +142,68 @@ internal fun AccountsList(
                         .offset(y = (-32).dp),
                     state = listState,
                 ) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 24.dp, bottom = 16.dp),
-                        ) {
-                            Button(
-                                modifier = Modifier
-                                    .align(Alignment.Center),
-                                onClick = { showTeamPicker = true },
-                            ) {
-                                Text(
-                                    text = "Submit a Team & Date",
-                                    textAlign = TextAlign.Center,
-                                )
-                            }
-                        }
-                    }
+//                    item {
+//                        Box(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(top = 24.dp, bottom = 16.dp),
+//                        ) {
+//                            Button(
+//                                modifier = Modifier
+//                                    .align(Alignment.Center),
+//                                onClick = { showTeamPicker = true },
+//                            ) {
+//                                Text(
+//                                    text = "Submit a Team & Date",
+//                                    textAlign = TextAlign.Center,
+//                                )
+//                            }
+//                        }
+//                    }
 
                     item {
-                        val text = if (chosenDates.isNotEmpty()) {
-                            "You are eligible for the shown teams and dates."
-                        } else {
-                            "Add the teams and dates you want to be eligible for."
-                        }
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 32.dp, vertical = 16.dp)
+                                .padding(32.dp)
                                 .align(Alignment.CenterHorizontally),
-                            text = text,
+                            text = "You are eligible for your chosen matchups!",
                             color = Color.Gray,
                             textAlign = TextAlign.Center,
                         )
                     }
 
-                    items(chosenDates.sortedBy { it.first }) { chosenDate ->
-                        Row(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Column {
-                                Text(
-                                    text = chosenDate.first,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                                Text(text = chosenDate.second)
-                            }
-                            Spacer(modifier = Modifier.weight(1F))
-                            IconButton(
-                                onClick = { onRemoveDate(chosenDate) },
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Delete,
-                                    contentDescription = "Remove Account from ProjecTix",
-                                )
-                            }
-                        }
+                    item {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),
+                            text = "You're all set.\nWe'll Notify you no later than 14 days in advance via email. Thank you!",
+                            textAlign = TextAlign.Center,
+                        )
                     }
+
+//                    items(chosenDates.sortedBy { it.first }) { chosenDate ->
+//                        Row(
+//                            modifier = Modifier.padding(horizontal = 16.dp),
+//                            verticalAlignment = Alignment.CenterVertically,
+//                        ) {
+//                            Column {
+//                                Text(
+//                                    text = chosenDate.first,
+//                                    fontWeight = FontWeight.Bold,
+//                                )
+//                                Text(text = chosenDate.second)
+//                            }
+//                            Spacer(modifier = Modifier.weight(1F))
+//                            IconButton(
+//                                onClick = { onRemoveDate(chosenDate) },
+//                            ) {
+//                                Icon(
+//                                    imageVector = Icons.Rounded.Delete,
+//                                    contentDescription = "Remove Account from ProjecTix",
+//                                )
+//                            }
+//                        }
+//                    }
                 }
             }
         }
@@ -237,7 +233,7 @@ internal fun AccountsList(
                 teams = teams,
                 onGoToMatchupSelection = {
                     showTeamPicker = false
-                    onShowDatePicker(it)
+//                    onShowDatePicker(it)
                 },
                 onExitProjecTix = onExitProjecTix,
             )

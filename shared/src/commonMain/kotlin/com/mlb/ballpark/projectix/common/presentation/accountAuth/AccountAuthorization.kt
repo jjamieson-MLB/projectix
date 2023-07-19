@@ -6,10 +6,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Link
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -41,7 +45,6 @@ internal fun AccountAuthorization(
 
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         IconButton(
             modifier = Modifier.padding(start = 16.dp, top = 16.dp),
@@ -54,12 +57,31 @@ internal fun AccountAuthorization(
         }
         Image(
             painter = painterResource("projectix.png"),
+            contentDescription = "ProjecTix Logo",
+        )
+        Icon(
+            modifier = Modifier
+                .height(48.dp)
+                .width(48.dp)
+                .offset(y = (-32).dp)
+                .align(Alignment.CenterHorizontally),
+            imageVector = Icons.Rounded.Link,
             contentDescription = null,
+        )
+        Image(
+            modifier = Modifier
+                .height(256.dp)
+                .width(256.dp)
+                .offset(x = (-8).dp, y = (-80).dp)
+                .align(Alignment.CenterHorizontally),
+            painter = painterResource(account.accountIcon),
+            contentDescription = "${account.accountType.value} Logo",
         )
         Text(
             modifier = Modifier
                 .padding(horizontal = 48.dp)
-                .align(Alignment.CenterHorizontally),
+                .align(Alignment.CenterHorizontally)
+                .offset(y = (-80).dp),
             text = "Link your ${account.accountType.value} account to ProjecTix",
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
@@ -69,7 +91,8 @@ internal fun AccountAuthorization(
             modifier = Modifier
                 .wrapContentSize()
                 .padding(top = 16.dp)
-                .align(Alignment.CenterHorizontally),
+                .align(Alignment.CenterHorizontally)
+                .offset(y = (-80).dp),
             onClick = {
                 showLoading = true
                 onSuccessfulAccountLink(account)
