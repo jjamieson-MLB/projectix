@@ -100,7 +100,9 @@ fun RootContent(
 
         Screen.TEAM_PICKER -> {
             TeamPicker(
-                onExitProjecTix = {},
+                onExitProjecTix = {
+                    screenState.goToMatchupSelection(null)
+                },
                 onGoToMatchupSelection = {
                     onTeamSelected(it)
                     screenState.goToMatchupSelection(it as? String)
