@@ -46,6 +46,7 @@ internal fun MatchupSelections(
     onMatchupsSelected: (List<ProjecTixMatchup>) -> Unit,
 ) {
     var checkedState by remember { mutableStateOf(false) }
+    var maxReached by remember { mutableStateOf(false) }
 
     Column {
         Row {
@@ -70,6 +71,8 @@ internal fun MatchupSelections(
             }
         }
         Image(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
             painter = painterResource("projectix.png"),
             contentDescription = null,
         )
@@ -91,14 +94,13 @@ internal fun MatchupSelections(
             )
             Text(text = "Away")
         }
-        val maxReached = projecTixMatchups.filter { it.selected }.size >= MAX_SELECTABLE_ITEMS
         if (maxReached) {
             Text(
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                     .align(Alignment.CenterHorizontally),
                 textAlign = TextAlign.Center,
-                text = "You have reached the maximum of selected matchups!",
+                text = "You have reached the maximum number of selected matchups!",
             )
         }
         LazyVerticalStaggeredGrid(
@@ -119,6 +121,11 @@ internal fun MatchupSelections(
                 ) { matchup ->
                     MatchupCard(
                         matchup = matchup,
+                        onSelected = { selected ->
+                            matchup.selected = selected
+                            maxReached =
+                                projecTixMatchups.filter { it.selected }.size >= MAX_SELECTABLE_ITEMS
+                        },
                         selectable = matchup.selected || !maxReached,
                     )
                 }

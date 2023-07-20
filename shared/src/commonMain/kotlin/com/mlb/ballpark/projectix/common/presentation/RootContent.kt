@@ -42,12 +42,16 @@ fun RootContent(
                 onGoToMatchupSelection = {
                     screenState.goToMatchupSelection(null)
                 },
-                onRemoveAccount = { model.removeAccount(it) },
+                onRemoveAccount = {
+                    model.removeAccount(it)
+                    matchupsSelected = listOf()
+                },
                 onExitProjecTix = onExitProjecTix,
 //                onShowDatePicker = onTeamSelected,
 //                chosenDates = chosenDates,
 //                onRemoveDate = onRemoveDate,
                 teams = teams,
+                matchupsSelected = matchupsSelected,
             )
         }
 

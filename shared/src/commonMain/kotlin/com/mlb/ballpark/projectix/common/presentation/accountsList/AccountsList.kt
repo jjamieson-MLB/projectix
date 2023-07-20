@@ -24,8 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mlb.ballpark.projectix.common.presentation.models.Account
-import com.mlb.ballpark.projectix.common.presentation.teamPicker.TeamPicker
+import com.mlb.ballpark.projectix.common.presentation.models.ProjecTixMatchup
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -47,9 +45,8 @@ internal fun AccountsList(
     onRemoveAccount: (Account) -> Unit,
     onExitProjecTix: () -> Unit,
     teams: List<String>, // todo: move this internal
+    matchupsSelected: List<ProjecTixMatchup>,
 ) {
-    var showTeamPicker by remember { mutableStateOf(false) }
-
     Box(
         modifier = modifier.fillMaxSize(),
     ) {
@@ -57,11 +54,7 @@ internal fun AccountsList(
 
         IconButton(
             modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-            onClick = if (showTeamPicker) {
-                { showTeamPicker = false }
-            } else {
-                onExitProjecTix
-            },
+            onClick = onExitProjecTix,
         ) {
             Icon(
                 imageVector = Icons.Rounded.Close,
@@ -69,16 +62,18 @@ internal fun AccountsList(
             )
         }
 
-        IconButton(
-            modifier = Modifier
-                .padding(top = 16.dp, end = 16.dp)
-                .align(Alignment.TopEnd),
-            onClick = {},
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Person,
-                contentDescription = "ProjecTix Profile",
-            )
+        if (accounts.isNotEmpty()) {
+            IconButton(
+                modifier = Modifier
+                    .padding(top = 16.dp, end = 16.dp)
+                    .align(Alignment.TopEnd),
+                onClick = {},
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Person,
+                    contentDescription = "ProjecTix Profile",
+                )
+            }
         }
 
         Column(
@@ -173,12 +168,14 @@ internal fun AccountsList(
                         )
                     }
 
-                    item {
-                        Text(
-                            modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),
-                            text = "You're all set.\nWe'll Notify you no later than 14 days in advance via email. Thank you!",
-                            textAlign = TextAlign.Center,
-                        )
+                    if (matchupsSelected.isNotEmpty()) {
+                        item {
+                            Text(
+                                modifier = Modifier.padding(horizontal = 32.dp, vertical = 32.dp),
+                                text = "You're all set.\nWe'll Notify you no later than 14 days in advance via email. Thank you!",
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
 
 //                    items(chosenDates.sortedBy { it.first }) { chosenDate ->
@@ -208,14 +205,14 @@ internal fun AccountsList(
             }
         }
 
-        if (accounts.isNotEmpty()) {
+        if (accounts.isNotEmpty() && matchupsSelected.isEmpty()) {
             ExtendedFloatingActionButton(
                 modifier = Modifier
                     .wrapContentSize()
                     .align(Alignment.BottomEnd)
                     .padding(end = 16.dp, bottom = 16.dp),
                 text = {
-                    Text(text = "Edit Eligible Games")
+                    Text(text = "Select Matchups")
                 },
                 icon = {
                     Icon(
@@ -225,17 +222,6 @@ internal fun AccountsList(
                 },
                 onClick = onGoToMatchupSelection,
                 containerColor = MaterialTheme.colorScheme.primary,
-            )
-        }
-
-        if (showTeamPicker) {
-            TeamPicker(
-                teams = teams,
-                onGoToMatchupSelection = {
-                    showTeamPicker = false
-//                    onShowDatePicker(it)
-                },
-                onExitProjecTix = onExitProjecTix,
             )
         }
     }

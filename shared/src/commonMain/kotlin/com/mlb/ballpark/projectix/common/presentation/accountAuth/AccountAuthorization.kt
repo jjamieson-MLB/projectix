@@ -1,7 +1,6 @@
 package com.mlb.ballpark.projectix.common.presentation.accountAuth
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -56,6 +55,8 @@ internal fun AccountAuthorization(
             )
         }
         Image(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
             painter = painterResource("projectix.png"),
             contentDescription = "ProjecTix Logo",
         )

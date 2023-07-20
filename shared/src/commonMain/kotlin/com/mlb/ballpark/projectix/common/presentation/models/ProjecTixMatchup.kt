@@ -10,6 +10,8 @@ data class ProjecTixMatchup(
 
     val mAwayNameTeam: String? = null,
 
+    val mAwayTeamIconRes: String? = null,
+
     val descr: String? = null,
 
     val mGameDate: String? = null,
@@ -23,6 +25,8 @@ data class ProjecTixMatchup(
     val mHomeNameShort: String? = null,
 
     val mHomeNameTeam: String? = null,
+
+    val mHomeTeamIconRes: String? = null,
 
     val mVenueCity: String? = null,
 
