@@ -172,7 +172,7 @@ internal fun AccountsList(
                         item {
                             Text(
                                 modifier = Modifier.padding(horizontal = 32.dp, vertical = 32.dp),
-                                text = "You're all set.\nWe'll Notify you no later than 14 days in advance via email. Thank you!",
+                                text = "You're all set.\nWe'll notify you no later than 14 days in advance via email. Thank you!",
                                 textAlign = TextAlign.Center,
                             )
                         }
